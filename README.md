@@ -30,7 +30,7 @@
 
   ## Скриншоты экрана
 
-  * **Список людей**
+* **Список людей**
   <img width="1662" height="371" alt="image" src="https://github.com/user-attachments/assets/0ecc0ece-a315-4612-af4a-58b35bb11c6e" />
 
  * **Детальная информация**
