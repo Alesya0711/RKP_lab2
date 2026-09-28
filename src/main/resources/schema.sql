@@ -8,5 +8,5 @@ CREATE TABLE IF NOT EXISTS persons (
     height DOUBLE,
     weight DOUBLE,
     birth_date DATE,
-    phone_number VARCHAR(20)
+    phone_number VARCHAR(12)
 );
