@@ -1,6 +1,7 @@
 package com.example.demo.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
 import java.time.LocalDate;
 
 @Entity
@@ -11,38 +12,51 @@ public class Person {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "last_name", nullable = false)
+    @NotBlank(message = "Фамилия обязательна")
+    @Size(min = 2, max = 50, message = "Длина фамилии от 2 до 50 символов")
+    @Column(name = "last_name", nullable = false, length = 50)
     private String lastName;
 
-    @Column(name = "first_name", nullable = false)
+    @NotBlank(message = "Имя обязательно")
+    @Size(min = 2, max = 50, message = "Длина имени от 2 до 50 символов")
+    @Column(name = "first_name", nullable = false, length = 50)
     private String firstName;
 
-    @Column(name = "middle_name")
+    @Column(name = "middle_name", length = 50)
     private String middleName;
 
-    @Column(name = "gender")
+    @Column(name = "gender", length = 20)
     private String gender;
 
-    @Column(name = "nationality")
+    @Column(name = "nationality", length = 50)
     private String nationality;
 
+    @Positive(message = "Рост должен быть положительным числом")
     @Column(name = "height")
     private Double height;
 
+    @Positive(message = "Вес должен быть положительным числом")
     @Column(name = "weight")
     private Double weight;
 
+    @Past(message = "Дата рождения должна быть в прошлом")
     @Column(name = "birth_date")
     private LocalDate birthDate;
 
-    @Column(name = "phone_number")
+    @Pattern(regexp = "^\\+?[0-9]{10,15}$", message = "Некорректный номер телефона")
+    @Column(name = "phone_number", length = 20)
     private String phoneNumber;
 
-    public Person() {
-    }
+    @NotNull(message = "Адрес обязателен")
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "address_id", nullable = false)
+    private Address address = new Address();
+
+    public Person() {}
 
     public Person(String lastName, String firstName, String middleName, String gender,
-                  String nationality, Double height, Double weight, LocalDate birthDate, String phoneNumber) {
+                  String nationality, Double height, Double weight, LocalDate birthDate,
+                  String phoneNumber, Address address) {
         this.lastName = lastName;
         this.firstName = firstName;
         this.middleName = middleName;
@@ -52,9 +66,9 @@ public class Person {
         this.weight = weight;
         this.birthDate = birthDate;
         this.phoneNumber = phoneNumber;
+        this.address = address;
     }
 
-    // Getters & Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
@@ -84,4 +98,7 @@ public class Person {
 
     public String getPhoneNumber() { return phoneNumber; }
     public void setPhoneNumber(String phoneNumber) { this.phoneNumber = phoneNumber; }
+
+    public Address getAddress() { return address; }
+    public void setAddress(Address address) { this.address = address; }
 }
