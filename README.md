@@ -34,8 +34,13 @@
 * **База данных и инициализация (H2 Database, `schema.sql`, `data.sql`)**
   Встроенная реляционная БД работает в оперативной памяти. Файл `schema.sql` создает схему из трех таблиц с внешними ключами при старте, а `data.sql` автоматически заполняет их начальными тестовыми записями.
 
-
-
+## Поиск по критериям
+* **Поиск по фамилии** 
+<img width="1326" height="232" alt="image" src="https://github.com/user-attachments/assets/18913abc-3211-428b-a964-a614271516e2" />
+* **Поиск по городу** 
+<img width="1335" height="245" alt="image" src="https://github.com/user-attachments/assets/f7338d5b-9137-471b-abe9-791470918dfc" />
+* **Поиск по полу** 
+<img width="1312" height="272" alt="image" src="https://github.com/user-attachments/assets/1867be82-1404-4a97-b618-9e6232467806" />
 
 
 # Лабораторная работа №2
