@@ -1,0 +1,218 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "lab4",
+    "version": "1.0.0",
+    "description": ""
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8080"
+    }
+  ],
+  "paths": {
+    "/api/persons": {
+      "get": {
+        "summary": "http://localhost:8080/api/persons_получить всех",
+        "responses": {},
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "http://localhost:8080/api/persons_добавление человека",
+        "responses": {},
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "lastName": {
+                    "type": "string"
+                  },
+                  "firstName": {
+                    "type": "string"
+                  },
+                  "middleName": {
+                    "type": "string"
+                  },
+                  "gender": {
+                    "type": "string"
+                  },
+                  "nationality": {
+                    "type": "string"
+                  },
+                  "height": {
+                    "type": "number"
+                  },
+                  "weight": {
+                    "type": "integer"
+                  },
+                  "birthDate": {
+                    "type": "string",
+                    "format": "date"
+                  },
+                  "phoneNumber": {
+                    "type": "string",
+                    "format": "utc-millisec"
+                  },
+                  "cityId": {
+                    "type": "integer"
+                  },
+                  "street": {
+                    "type": "string"
+                  },
+                  "house": {
+                    "type": "string",
+                    "format": "utc-millisec"
+                  },
+                  "apartment": {
+                    "type": "string",
+                    "format": "utc-millisec"
+                  }
+                }
+              },
+              "example": {
+                "lastName": "Смирнов",
+                "firstName": "Алексей",
+                "middleName": "Иванович",
+                "gender": "Мужской",
+                "nationality": "Русский",
+                "height": 182.5,
+                "weight": 80,
+                "birthDate": "1990-05-15",
+                "phoneNumber": "+79991234567",
+                "cityId": 1,
+                "street": "Ленина",
+                "house": "15",
+                "apartment": "42"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/persons/2": {
+      "get": {
+        "summary": "http://localhost:8080/api/persons/1_получить по id",
+        "responses": {}
+      }
+    },
+    "/api/persons/1": {
+      "put": {
+        "summary": "http://localhost:8080/api/persons/1_обновление данных",
+        "responses": {},
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "lastName": {
+                    "type": "string"
+                  },
+                  "firstName": {
+                    "type": "string"
+                  },
+                  "middleName": {
+                    "type": "string"
+                  },
+                  "gender": {
+                    "type": "string"
+                  },
+                  "nationality": {
+                    "type": "string"
+                  },
+                  "height": {
+                    "type": "number"
+                  },
+                  "weight": {
+                    "type": "integer"
+                  },
+                  "birthDate": {
+                    "type": "string",
+                    "format": "date"
+                  },
+                  "phoneNumber": {
+                    "type": "string",
+                    "format": "utc-millisec"
+                  },
+                  "cityId": {
+                    "type": "integer"
+                  },
+                  "street": {
+                    "type": "string"
+                  },
+                  "house": {
+                    "type": "string",
+                    "format": "utc-millisec"
+                  },
+                  "apartment": {
+                    "type": "string",
+                    "format": "utc-millisec"
+                  }
+                }
+              },
+              "example": {
+                "lastName": "Смирнов",
+                "firstName": "Алексей",
+                "middleName": "Иванович",
+                "gender": "Мужской",
+                "nationality": "Русский",
+                "height": 182.5,
+                "weight": 75,
+                "birthDate": "1990-05-15",
+                "phoneNumber": "+70000000000",
+                "cityId": 1,
+                "street": "Ленина",
+                "house": "15",
+                "apartment": "42"
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "http://localhost:8080/api/persons/1_удаление",
+        "responses": {}
+      }
+    },
+    "/api/persons/1/relocate": {
+      "patch": {
+        "summary": "http://localhost:8080/api/persons/1/relocate?newCityId=2&newStreet=Пушкина_изменение города",
+        "parameters": [
+          {
+            "name": "newCityId",
+            "in": "query",
+            "schema": {
+              "type": "integer"
+            },
+            "example": 2
+          },
+          {
+            "name": "newStreet",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "example": "Пушкина"
+          }
+        ],
+        "responses": {}
+      }
+    },
+    "/api/persons/statistics": {
+      "get": {
+        "summary": "http://localhost:8080/api/persons/statistics_статистика",
+        "responses": {}
+      }
+    }
+  }
+}
