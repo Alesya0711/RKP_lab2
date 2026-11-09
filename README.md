@@ -1,3 +1,48 @@
+# Лабораторная работа №4: Построение REST API
+
+## Цель работы
+Создание Spring-приложения с несколькими таблицами с использованием REST API.
+
+## Вариант 1: «Человек»
+Сущность содержит: фамилия; имя; отчество; пол; национальность; рост; вес; дата рождения; номер телефона; домашний адрес (связь с таблицами городов и адресов).
+
+## Архитектура и стек технологий
+* **Платформа:** Java 17 / 21, Spring Boot 3.2.x
+* **База данных:** H2 Database (In-Memory) + Spring Data JPA
+* **API:** Spring Web (REST Controller)
+* **Паттерны:** DTO (Data Transfer Object) для избежания циклических ссылок и изоляции БД.
+* **Валидация:** Hibernate Validator (JSR 380)
+* **Формат данных:** JSON (маршаллинг через Jackson).
+
+## Реализованные методы (Endpoints)
+
+### Базовые CRUD-операции
+* `GET /api/persons` — Получить список всех людей (Статус `200 OK`).
+* `GET /api/persons/{id}` — Получить человека по ID (Статус `200 OK` или `404 Not Found`).
+* `POST /api/persons` — Создать новую запись (Статус `201 Created`). Принимает `PersonRequestDTO` с валидацией.
+* `PUT /api/persons/{id}` — Полностью обновить данные человека по ID (Статус `200 OK`).
+* `DELETE /api/persons/{id}` — Удалить человека по ID (Статус `204 No Content`).
+
+### Расширенная бизнес-логика
+* `GET /api/persons/statistics` — **Аналитика**. Возвращает общее количество людей, средний рост, а также распределение по полу.
+* `PATCH /api/persons/{id}/relocate` — **Сложное обновление с частичными данными**. Оформление переезда: принимает `newCityId` и `newStreet` в качестве параметров запроса и точечно обновляет только адрес человека, не затрагивая остальные данные.
+
+## Демонстрация работы 
+
+1. Создание записи (POST)
+   <img width="647" height="857" alt="image" src="https://github.com/user-attachments/assets/d4d7feb4-b8f7-4f2d-b5ac-937ccfdd987c" />
+   ![Validation Error](link_to_image_2)
+2. Получение списка (GET)
+   <img width="893" height="687" alt="image" src="https://github.com/user-attachments/assets/65d7228b-1819-41f4-8ce0-638930fee8da" />
+3. Переезд (PATCH)
+   <img width="848" height="665" alt="image" src="https://github.com/user-attachments/assets/19ecda22-ffe5-461d-9742-6c0b60eadb87" />
+4. Статистика (GET)
+  <img width="560" height="393" alt="image" src="https://github.com/user-attachments/assets/ae5f7b0e-b3eb-42e5-a249-863c87ecbd55" />
+5. Удаление (DELETE 204 No Content)
+   <img width="645" height="257" alt="image" src="https://github.com/user-attachments/assets/7ec6be91-9711-4365-a349-a7dac18d1928" />
+
+
+
 # Лабораторная работа №3
 
 ## Цель работы
