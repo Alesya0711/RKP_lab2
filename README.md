@@ -1,3 +1,69 @@
+# Лабораторная работа №6: Аутентификация пользователей (Spring Security)
+
+## Цель работы
+Научиться использовать фреймворк Spring Security для аутентификации и авторизации пользователей: добавить в приложение страницу входа, хранить учётные данные в БД с хешированием паролей и разграничить доступ к страницам и REST-методам в зависимости от роли пользователя.
+
+## Архитектура проекта
+- **Стек:** Java 17, Spring Boot 4.0.8, Maven, Spring Web MVC, Spring Security, Spring JDBC, Thymeleaf, Hibernate Validator, Bootstrap 5.
+- **СУБД:** H2 (in-memory). Структуру создаёт `schema.sql`, начальные данные (в том числе пользователей) загружает `data.sql`.
+- **Основные слои:**
+  - **Controller** — `PersonController` (веб-интерфейс на Thymeleaf), `PersonRestController` (REST API), `LoginController` (страница входа), `GlobalModelAttributes` (передача в шаблоны имени и роли текущего пользователя).
+  - **Service** — `UserService` (реализация `UserDetailsService`, загружает пользователя для Spring Security).
+  - **Repository** — `PersonRepository`, `CityRepository`, `UserRepository` (SQL-запросы через `JdbcTemplate`).
+  - **Config** — `SecurityConfig` (цепочка фильтров безопасности, правила доступа, кодировщик паролей).
+  - **Exception** — `NotFoundException`, `GlobalExceptionHandler` (ответ `404` для REST).
+- **Ключевые аннотации:**
+  - `@Configuration`, `@EnableWebSecurity` — класс настройки безопасности.
+  - `@Bean` — бины `SecurityFilterChain` и `PasswordEncoder`.
+  - `@Service` — `UserService`.
+  - `@Repository` — репозитории на `JdbcTemplate`.
+  - `@ControllerAdvice`, `@ModelAttribute` — общие атрибуты для всех шаблонов.
+  - `@RestControllerAdvice`, `@ExceptionHandler` — обработка исключений в REST.
+  - `@Valid` — проверка входных данных.
+- **Описание моделей данных и DTO:**
+  - `Role` — перечисление ролей: `ROLE_USER`, `ROLE_ADMIN`.
+  - `AppUser` — пользователь системы: `id`, `username`, `password` (хеш BCrypt), `role`. Таблица `users`.
+  - `Person`, `Address`, `City` — предметная область (человек, адрес, город), простые классы без аннотаций JPA.
+  - `PersonRequestDTO` — данные запроса на создание/изменение человека (с валидацией).
+  - `PersonResponseDTO` — данные ответа REST (ФИО и адрес в виде строк).
+
+## Алгоритм работы
+
+1. Пользователь обращается к любой странице, например `/persons`.
+2. Цепочка фильтров Spring Security проверяет, аутентифицирован ли пользователь. Если нет, браузер перенаправляется на `/login`, а REST-клиент получает `401 Unauthorized`.
+3. Пользователь вводит логин и пароль. Форма отправляется методом POST на `/login` вместе с CSRF-токеном (добавляется автоматически через `th:action`). Для REST используется HTTP Basic.
+4. Spring вызывает `UserService.loadUserByUsername(...)`, который через `UserRepository` ищет пользователя в таблице `users`. Если пользователь не найден, выбрасывается `UsernameNotFoundException`, и вход отклоняется.
+5. Spring сравнивает введённый пароль с хешем из БД с помощью `BCryptPasswordEncoder`. Пароли хранятся только в виде хеша BCrypt.
+6. При успешной проверке пользователь сохраняется в сессии как аутентифицированный с ролью из БД, и пользователь перенаправляется на `/persons`.
+7. При каждом запросе проверяется соответствие роли правилам доступа из `SecurityConfig`. Если роли недостаточно, возвращается `403 Forbidden`.
+8. В шаблонах кнопки добавления и удаления отображаются только администратору (флаг `isAdmin` из `GlobalModelAttributes`). Реальная защита выполняется на сервере правилами `SecurityConfig`, а скрытие кнопок служит только удобству.
+9. Выход выполняется POST-запросом на `/logout` с последующим перенаправлением на `/login?logout`.
+
+### Тестовые пользователи
+
+| Логин | Пароль | Роль |
+|---|---|---|
+| `admin` | `admin123` | `ROLE_ADMIN` |
+| `user` | `user123` | `ROLE_USER` |
+
+### Разграничение доступа
+
+| Ресурс | Аноним | USER | ADMIN |
+|---|---|---|---|
+| `/login` | + | + | + |
+| `/persons` (список, поиск) | - | + | + |
+| `/persons/edit/**`, `/persons/save` (редактирование) | - | + | + |
+| `/persons/new` (добавление) | - | - | + |
+| `/persons/delete/**` (удаление) | - | - | + |
+| `GET /api/persons/**` | - | + | + |
+| `PUT /api/persons/{id}`, `PATCH /api/persons/{id}/relocate` | - | + | + |
+| `POST /api/persons`, `DELETE /api/persons/{id}` | - | - | + |
+
+Сохранение новой записи через `/persons/save` пользователю с ролью `USER` дополнительно запрещено проверкой в `PersonController`.
+
+
+
+
 # Лабораторная работа №5: Работа с реляционными БД через JDBCTemplate
 
 ## Цель работы
