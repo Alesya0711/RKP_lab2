@@ -10,6 +10,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.Authentication;
 
 import java.util.Optional;
 
@@ -58,7 +60,14 @@ public class PersonController {
 
     @PostMapping("/save")
     public String savePerson(@Valid @ModelAttribute("person") Person person, BindingResult result,
-                             @RequestParam("address.city.id") Long cityId, Model model) {
+                             @RequestParam("address.city.id") Long cityId, Model model,
+                             Authentication authentication) {
+        boolean isAdmin = authentication.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
+        if (person.getId() == null && !isAdmin) {
+            throw new AccessDeniedException("Создавать записи может только ADMIN");
+        }
+
         if (result.hasErrors()) {
             model.addAttribute("cities", cityRepository.findAll());
             return "person-form";

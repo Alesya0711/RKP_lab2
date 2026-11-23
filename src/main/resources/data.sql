@@ -19,3 +19,9 @@ VALUES ('Кузнецов', 'Федор', 'Николаевич', 'Мужско�
 
 INSERT INTO persons (last_name, first_name, middle_name, gender, nationality, height, weight, birth_date, phone_number, address_id)
 VALUES ('Васькина', 'Мария', 'Викторовна', 'Женский', 'Русская', 169.0, 72.0, '2006-11-06', '+79997776622', 4);
+
+INSERT INTO users (username, password, role)
+VALUES ('admin', '$2b$10$EhS1mss7cF/mHCraYwe/ieZHypt2SpztNVgRZowrLT.CTb9mlvT2G', 'ROLE_ADMIN');
+
+INSERT INTO users (username, password, role)
+VALUES ('user', '$2b$10$Sgcmt7.jVQFMIWjJWmT3MOmf0C6l4RQi7EozH1na/dOkgemcv07H2', 'ROLE_USER');
